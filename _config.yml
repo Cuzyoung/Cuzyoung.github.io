@@ -21,7 +21,7 @@ repository               : "Cuzyoung/Cuzyoung.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "profile.jpg"
   name             : ""
   pronouns         : # example: "she/her"  
   bio              : ""
@@ -130,7 +130,7 @@ yandex_site_verification :
 
 # Social Sharing
 twitter:
-  username               : &twitter
+  username               : 
 facebook:
   username               :
   app_id                 :
@@ -301,7 +301,7 @@ plugins:
   - jekyll-feed
   - jekyll-gist
   - jekyll-paginate
-  - jekyll-sitemap
+  # - jekyll-sitemap
   - jemoji
 
 # Mimic GitHub Pages with --safe
@@ -309,7 +309,7 @@ whitelist:
   - jekyll-feed
   - jekyll-gist
   - jekyll-paginate
-  - jekyll-sitemap
+  # - jekyll-sitemap
   - jemoji
 
 

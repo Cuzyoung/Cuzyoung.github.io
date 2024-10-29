@@ -7,7 +7,7 @@ redirect_from:
   - /resume
 ---
 
-{% include base_path %}
+<!-- {% include base_path %} -->
 
 Personal information
 ======
@@ -15,7 +15,7 @@ Name: Ziyang Gong
 
 Base: China
 
-Email: 
+Email: gongzy23@mail2.sysu.edu.cn
 
 Education
 ======

@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ziyang Gong</title>
+  <meta name="description" content="Ziyang Gong" />
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- fonts & icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#111111;
+      --muted:#555;
+      --line:#e6e6e6;
+      --chip:#f4f4f4;
+      --link:#0b57d0;
+      --maxw: 1000px;
+      --radius: 10px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      background:var(--bg);
+      color:var(--fg);
+      font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height:1.55;
+    }
+    a{color:var(--link); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{max-width:var(--maxw); margin: 0 auto; padding: 28px 18px 64px;}
+
+    .topbar{
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+      padding: 0 0 14px; border-bottom:1px solid var(--line);
+      position: sticky; top:0;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+    .nav{
+      display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+      font-size:14px;
+    }
+    .nav a{padding:6px 8px; border-radius: 8px; color: var(--fg);}
+    .nav a:hover{background: var(--chip); text-decoration:none}
+
+    .brand{
+      font-weight:700; letter-spacing:0.2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--link); display:inline-block}
+
+    section{padding-top: 18px; margin-top: 18px; border-top: 1px solid var(--line);}
+    section h2{margin:0 0 12px; font-size: 18px}
+
+    /* ===== Background ===== */
+    #background{border-top:none; padding-top:18px; margin-top:0;}
+    .hero{
+      display:grid;
+      grid-template-columns: 160px 1fr;
+      gap: 20px;
+      padding: 10px 0 4px;
+    }
+    @media (max-width: 720px){
+      .hero{grid-template-columns: 1fr; }
+    }
+    .photo{
+      width:160px; height:260px; border-radius: var(--radius);
+      overflow:hidden; border:1px solid var(--line);
+      background: var(--chip);
+    }
+    .photo img{width:100%; height:100%; object-fit:cover}
+    .intro h1{
+      margin: 0 0 6px;
+      font-size: 26px;
+      line-height:1.2;
+    }
+    .intro .meta{
+      color: var(--muted);
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+    .intro p{margin: 10px 0}
+
+    .links{
+      display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      font-size: 14px;
+      text-decoration:none;
+    }
+    .btn:hover{background: var(--chip); text-decoration:none}
+
+    .logos{
+      margin-top: 18px;
+      display:flex; flex-wrap:wrap;
+      gap:24px;
+      align-items:flex-start;
+    }
+    .logo{
+      display:flex; flex-direction:column; align-items:center;
+      gap:8px;
+      text-align: center;
+    }
+    .logo img{height:50px; width:auto; display:block}
+    .logo span{font-size:13px; color:var(--muted)}
+
+    /* ===== News & Updates ===== */
+    .news-list{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .news-list li{
+      position: relative;
+      padding-left: 1.2em;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    .news-list li::before{
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+    .news-list .date{
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* ===== Publications ===== */
+    .pubnav{
+      display:flex; flex-wrap:wrap; gap:8px;
+      margin: 6px 0 14px;
+    }
+    .chipbtn{
+      border:1px solid var(--line);
+      background: var(--chip);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chipbtn[aria-pressed="true"]{
+      background: var(--bg);
+      border-color: color-mix(in srgb, var(--link) 55%, var(--line));
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--link) 22%, transparent);
+    }
+
+    /* left thumbnail layout */
+    .pub{
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 14px;
+      padding: 12px 12px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      align-items: start;
+    }
+    .pub .thumb{
+      width: 160px;
+      height: 110px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      overflow: hidden;
+    }
+    .pub .thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pub .content{min-width:0}
+    .pub .ptitle{
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+    .pub .pauth{color: var(--fg); font-size: 14px; margin-top: 4px}
+    .pub .pmeta{color: var(--fg); font-size: 13px; margin-top: 4px}
+
+    /* link line like: paper | arxiv | code | bibtex */
+    .pub .plinkline{
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--fg);
+    }
+    .pub .plinkline a{
+      font-size: 14px;
+    }
+    .pub .plinkline .sep{
+      margin: 0 6px;
+      color: var(--muted);
+      user-select:none;
+    }
+
+    .pub .pabstract{
+      margin-top: 8px;
+      color: var(--fg);
+      font-size: 14px;
+    }
+
+    .pub .ptags{display:flex; flex-wrap:wrap; gap:6px; margin-top: 10px}
+    .tag{
+      font-size: 12px;
+      padding: 4px 8px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--fg);
+    }
+
+    @media (max-width: 720px){
+      .pub{ grid-template-columns: 1fr; }
+      .pub .thumb{ width: 100%; height: 180px; }
+    }
+
+    .footer{
+      margin-top: 26px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      padding: 1px 6px; border:1px solid var(--line); border-radius: 6px; background: var(--chip);
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span><span>GZY</span></div>
+      <nav class="nav" aria-label="Primary">
+        <a href="#background">Background</a>
+        <a href="#news">News</a>
+        <a href="#publications">Publications</a>
+      </nav>
+    </div>
+
+    <!-- ===== Background ===== -->
+    <section id="background">
+      <div class="hero">
+        <div class="photo">
+          <img src="assets/gzy.jpg" alt="portrait" />
+        </div>
+
+        <div class="intro">
+          <h1>Ziyang Gong (龚子洋)</h1>
+          <div class="meta">
+            PhD Student · School of Computer Science, Shanghai Jiao Tong University
+          </div>
+
+          <p>
+            Welcome. I am <b>Ziyang Gong</b>, a first-year Ph.D. student at School of Computer Science, Shanghai Jiao Tong University, co-supervised by <b>Asst. Prof. Xue Yang</b> and <b>Prof. Junchi Yan</b> (IAPR Fellow, ACM MM Co-chair, and ICML Board Member). 
+            I am currently working with <b>ACE Robotics</b>, where I focus on advancing <b>Embodied Spatial Intelligence</b>, driven by the ambition to construct a next-generation cross-embodiment foundation brain. <br>
+            <br>
+
+            Before starting my Ph.D., I also worked at <b>OpenGVLab, Shanghai AI Laboratory</b>, where I was mentored by <b>Asst. Prof. Xue Yang</b> and <b>Dr. Gen Luo</b>, contributing to research at the intersection of embodied vision and foundation models. <br>
+            <br>
+
+            I believe the future of AI not only lies in building larger models, but also in building systems that truly understand and operate in space. 
+            
+            If you share similar curiosity about <b>Embodied Spatial Intelligence</b>, welcome to connect with me to explore collaborations. <br>
+            <br>
+          </p>
+
+          <div class="links">
+            <!-- 把 # 换成你的真实链接 -->
+            <a class="btn" href="https://scholar.google.com/citations?user=cWip8QgAAAAJ&hl=zh-CN" target="_blank" rel="noopener">
+              <i class="fa-solid fa-graduation-cap"></i> Google Scholar
+            </a>
+            <a class="btn" href="https://github.com/Cuzyoung" target="_blank" rel="noopener">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a class="btn" href="gongziyang@sjtu.edu.cn">
+              <i class="fa-solid fa-envelope"></i> Email
+            </a>
+          </div>
+
+          <div class="logos" aria-label="Affiliations">
+            <!-- 换成你的 logo 图片路径 -->
+            <div class="logo" title="Shanghai Jiao Tong University">
+              <img src="assets/logos/sjtu.png" alt="SJTU"/>
+              <span>Ph.D.</span>
+            </div>
+            <div class="logo" title="ACE Robotics">
+              <img src="assets/logos/ace.jpg" alt="ACE Robotics"/>
+              <span>Internship</span>
+            </div>
+            <div class="logo" title="SenseTime">
+              <img src="assets/logos/sensetime.png" alt="SenseTime"/>
+              <span>Internship</span>
+            </div>
+            <div class="logo" title="Tsinghua University">
+              <img src="assets/logos/thu.png" alt="Tsinghua University"/>
+              <span>Internship</span>
+            </div>
+            <div class="logo" title="Shanghai AI Laboratory">
+              <img src="assets/logos/ailab.png" alt="Shanghai AI Lab"/>
+              <span>Internship</span>
+            </div>
+            
+            <div class="logo" title="Sun Yat-sen University">
+              <img src="assets/logos/sysu.jpeg" alt="Sun Yat-sen University"/>
+              <span>M.E.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== News & Updates ===== -->
+    <section id="news">
+      <h2>News & Updates</h2>
+      <ul class="news-list">
+        <li><span class="date">[2025-03]</span> 🎉 Our paper has been accepted to CVPR 2025!</li>
+        <li><span class="date">[2025-01]</span> Started internship at ACE Robotics, working on Embodied Spatial Intelligence.</li>
+        <li><span class="date">[2024-09]</span> Joined Shanghai Jiao Tong University as a PhD student.</li>
+      </ul>
+    </section>
+
+    <!-- ===== Publications ===== -->
+    <section id="publications">
+      <h2>Publications</h2>
+
+      <!-- navigator -->
+      <div class="pubnav" role="toolbar" aria-label="Publication filters">
+        <button class="chipbtn" data-filter="all" aria-pressed="true">All</button>
+        <button class="chipbtn" data-filter="spatial" aria-pressed="false">Spatial</button>
+        <button class="chipbtn" data-filter="autodrive" aria-pressed="false">Autonomous Driving</button>
+        <button class="chipbtn" data-filter="uav" aria-pressed="false">UAV / Low-altitude</button>
+        <button class="chipbtn" data-filter="embodied" aria-pressed="false">Embodied</button>
+        <button class="chipbtn" data-filter="rs" aria-pressed="false">Remote Sensing</button>
+      </div>
+
+      <div id="pubList" class="list">
+        <!-- ===== Example 1 ===== -->
+        <article class="pub" data-tags="spatial,embodied">
+          <div class="thumb">
+            <!-- 换成你每篇文章的缩略图：assets/pubs/xxx.png -->
+            <img src="assets/pubs/paperA.png" alt="Paper A thumbnail">
+          </div>
+
+          <div class="content">
+            <div class="ptitle">Paper Title A (with Left Thumbnail)</div>
+            <div class="pauth">Author1, <b>Your Name</b>, Author3, ...</div>
+            <div class="pmeta">CVPR · 2026</div>
+
+            <div class="plinkline">
+              <a href="#" target="_blank" rel="noopener">paper</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">arxiv</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">project page</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">code</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">bibtex</a>
+            </div>
+
+            <div class="pabstract">
+              一句话摘要（可选）：我们提出了 XXX，使得 YYY 在 ZZZ 场景下更可靠/更高效。
+            </div>
+
+            <div class="ptags">
+              <span class="tag">Spatial</span>
+              <span class="tag">Embodied</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Example 2 ===== -->
+        <article class="pub" data-tags="autodrive">
+          <div class="thumb">
+            <img src="assets/pubs/paperB.png" alt="Paper B thumbnail">
+          </div>
+          <div class="content">
+            <div class="ptitle">Paper Title B</div>
+            <div class="pauth">Author1, Author2, <b>Your Name</b>, ...</div>
+            <div class="pmeta">ICRA · 2025</div>
+
+            <div class="plinkline">
+              <a href="#" target="_blank" rel="noopener">paper</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">project page</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">code</a>
+            </div>
+
+            <div class="pabstract">
+              一句话摘要（可选）：围绕自动驾驶场景的 XXX，我们构建了 YYY 并验证了 ZZZ。
+            </div>
+
+            <div class="ptags">
+              <span class="tag">Autonomous Driving</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Example 3 ===== -->
+        <article class="pub" data-tags="rs">
+          <div class="thumb">
+            <img src="assets/pubs/paperC.png" alt="Paper C thumbnail">
+          </div>
+          <div class="content">
+            <div class="ptitle">Paper Title C</div>
+            <div class="pauth"><b>Your Name</b>, Author2, ...</div>
+            <div class="pmeta">TGRS · 2025</div>
+
+            <div class="plinkline">
+              <a href="#" target="_blank" rel="noopener">paper</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">code</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">dataset</a>
+            </div>
+
+            <div class="pabstract">
+              一句话摘要（可选）：面向遥感 XXX，我们提出 YYY 以提升跨域泛化与可解释性。
+            </div>
+
+            <div class="ptags">
+              <span class="tag">Remote Sensing</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Example 4 ===== -->
+        <article class="pub" data-tags="uav,spatial">
+          <div class="thumb">
+            <img src="assets/pubs/paperD.png" alt="Paper D thumbnail">
+          </div>
+          <div class="content">
+            <div class="ptitle">Paper Title D</div>
+            <div class="pauth">Author1, <b>Your Name</b>, ...</div>
+            <div class="pmeta">NeurIPS · 2024</div>
+
+            <div class="plinkline">
+              <a href="#" target="_blank" rel="noopener">paper</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">demo</a><span class="sep">|</span>
+              <a href="#" target="_blank" rel="noopener">bibtex</a>
+            </div>
+
+            <div class="pabstract">
+              一句话摘要（可选）：我们在 UAV 低空场景下提出 XXX，支持 YYY 的结构化输出与评测。
+            </div>
+
+            <div class="ptags">
+              <span class="tag">UAV</span>
+              <span class="tag">Spatial</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="footer">
+        <div>Last updated: <span id="lastUpdated">YYYY-MM-DD</span></div>
+        <div>Tip: press <span class="kbd">/</span> to focus filters</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ===== Publications filter =====
+    const chips = Array.from(document.querySelectorAll(".chipbtn"));
+    const pubs  = Array.from(document.querySelectorAll(".pub"));
+
+    function setActive(filter){
+      chips.forEach(c => c.setAttribute("aria-pressed", String(c.dataset.filter === filter)));
+      pubs.forEach(p => {
+        const tags = (p.dataset.tags || "").split(",").map(s => s.trim()).filter(Boolean);
+        const show = (filter === "all") || tags.includes(filter);
+        p.style.display = show ? "" : "none";
+      });
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => setActive(chip.dataset.filter));
+    });
+
+    // default
+    setActive("all");
+
+    // update date
+    document.getElementById("lastUpdated").textContent =
+      new Date().toISOString().slice(0,10);
+
+    // optional hotkey: "/" focuses first chip
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "/") {
+        e.preventDefault();
+        chips[0].focus();
+      }
+    });
+  </script>
+</body>
+</html>

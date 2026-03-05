@@ -22,6 +22,13 @@
       <span class="brand-dot"></span>
       <span>Ziyang Gong</span>
     </div>
+    <!-- 点赞按钮 -->
+    <div class="like-container" id="likeContainer">
+      <button class="like-btn" id="likeBtn" aria-label="点赞">
+        <i class="fa-solid fa-heart" id="likeIcon"></i>
+      </button>
+      <span class="like-count" id="likeCount">0</span>
+    </div>
     <nav class="nav" aria-label="Primary">
       <a href="#about">About</a>
       <a href="#news">News</a>
@@ -385,6 +392,23 @@
     </div>
 
   </div>
+
+  <!-- ===== Visitor Map ===== -->
+  <div class="card" style="text-align: center; padding: var(--paddingLG);">
+    <h3 style="margin: 0 0 var(--margin) 0; color: var(--colorText); font-size: var(--fontSize);">
+      <i class="fa-solid fa-earth-americas" style="color: var(--colorPrimary);"></i> Visitors
+    </h3>
+    <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=380&t=n&d=hFR-3g6IlDmVRlfxWEb6vhuPb0Q0_JWj4gEV0TPY-MA&co=6fbcf2&cmo=2989f4&cmn=f90000&ct=ffffff"></script>
+  </div>
+
+  <footer class="footer" style="text-align: center; padding: var(--paddingLG) 0;">
+    <div style="color: var(--colorTextTertiary); font-size: var(--fontSizeSm);">
+      Last updated: <span id="lastUpdated">2026-03-05</span> · 
+      <a href="https://github.com/Cuzyoung/Cuzyoung.github.io" target="_blank" style="color: var(--colorTextTertiary);">
+        <i class="fa-brands fa-github"></i> Source
+      </a>
+    </div>
+  </footer>
 
   <script src="js/main.js"></script>
 </body>

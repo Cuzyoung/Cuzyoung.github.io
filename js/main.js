@@ -1,9 +1,9 @@
-// ===== Like Button Functionality with CountAPI =====
+// ===== Like Button Functionality with Firebase =====
 (function() {
-  const NAMESPACE = 'ziyanggong';
-  const KEY = 'homepage_likes';
+  const DATABASE_URL = 'https://ziyang-like-default-rtdb.firebaseio.com';
+  const LIKES_PATH = '/likes';
   const LIKED_KEY = 'ziyang_gong_has_liked';
-  const API_BASE = 'https://api.countapi.xyz';
+  const DEVICE_ID_KEY = 'ziyang_gong_device_id';
 
   const likeBtn = document.getElementById('likeBtn');
   const likeCount = document.getElementById('likeCount');
@@ -11,7 +11,17 @@
 
   if (!likeBtn || !likeCount) return;
 
-  // 检查本地是否已点赞（防止同一浏览器重复点赞）
+  // 生成设备唯一ID
+  function getDeviceId() {
+    let deviceId = localStorage.getItem(DEVICE_ID_KEY);
+    if (!deviceId) {
+      deviceId = 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      localStorage.setItem(DEVICE_ID_KEY, deviceId);
+    }
+    return deviceId;
+  }
+
+  // 检查本地是否已点赞
   function hasLikedLocally() {
     return localStorage.getItem(LIKED_KEY) === 'true';
   }
@@ -21,58 +31,53 @@
     localStorage.setItem(LIKED_KEY, 'true');
   }
 
-  // 取消本地点赞标记
-  function removeLikedLocally() {
-    localStorage.removeItem(LIKED_KEY);
-  }
-
-  // 获取当前点赞数
-  async function fetchCount() {
+  // 获取当前点赞数和已点赞设备列表
+  async function fetchLikes() {
     try {
-      const response = await fetch(`${API_BASE}/get/${NAMESPACE}/${KEY}`);
+      const response = await fetch(`${DATABASE_URL}${LIKES_PATH}.json`);
       const data = await response.json();
-      return data.value || 0;
+      if (!data) {
+        return { count: 0, devices: {} };
+      }
+      const devices = data.devices || {};
+      const count = Object.keys(devices).length;
+      return { count, devices };
     } catch (err) {
-      console.log('Failed to fetch count, using fallback');
-      // 失败时使用本地存储作为后备
-      return parseInt(localStorage.getItem('like_count_fallback') || '0');
+      console.error('Failed to fetch likes:', err);
+      return { count: 0, devices: {} };
     }
   }
 
-  // 增加点赞数
-  async function incrementCount() {
+  // 添加点赞
+  async function addLike() {
+    const deviceId = getDeviceId();
     try {
-      const response = await fetch(`${API_BASE}/hit/${NAMESPACE}/${KEY}`);
-      const data = await response.json();
-      return data.value;
+      // 使用 PUT 添加设备到列表
+      const response = await fetch(`${DATABASE_URL}${LIKES_PATH}/devices/${deviceId}.json`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          timestamp: Date.now(),
+          userAgent: navigator.userAgent.slice(0, 50)
+        })
+      });
+      if (response.ok) {
+        const data = await fetchLikes();
+        return data.count;
+      }
+      return null;
     } catch (err) {
-      // 如果API失败，使用本地存储
-      const current = parseInt(localStorage.getItem('like_count_fallback') || '0');
-      const updated = current + 1;
-      localStorage.setItem('like_count_fallback', updated.toString());
-      return updated;
-    }
-  }
-
-  // 获取创建信息（用于判断是否首次创建）
-  async function getInfo() {
-    try {
-      const response = await fetch(`${API_BASE}/info/${NAMESPACE}/${KEY}`);
-      return await response.json();
-    } catch (err) {
+      console.error('Failed to add like:', err);
       return null;
     }
   }
 
   // 更新显示
   async function updateDisplay() {
-    const count = await fetchCount();
+    const { count } = await fetchLikes();
     const liked = hasLikedLocally();
     likeCount.textContent = count;
     if (liked) {
       likeBtn.classList.add('liked');
-      likeIcon.classList.remove('fa-regular');
-      likeIcon.classList.add('fa-solid');
     } else {
       likeBtn.classList.remove('liked');
     }
@@ -81,44 +86,33 @@
   // 点击事件
   likeBtn.addEventListener('click', async function() {
     if (hasLikedLocally()) {
-      // 已点赞，提示或取消（CountAPI不支持减少，这里只做视觉反馈）
+      // 已点赞，只做视觉反馈
       likeBtn.style.transform = 'scale(0.95)';
       setTimeout(() => {
         likeBtn.style.transform = '';
       }, 150);
-      // 可以取消本地标记，但计数器不会减
-      // removeLikedLocally();
     } else {
-      // 未点赞，增加点赞
-      const newCount = await incrementCount();
-      setLikedLocally();
-      likeCount.textContent = newCount;
-      likeBtn.classList.add('liked');
+      // 未点赞，添加点赞
+      const newCount = await addLike();
+      if (newCount !== null) {
+        setLikedLocally();
+        likeCount.textContent = newCount;
+        likeBtn.classList.add('liked');
 
-      // 添加动画效果
-      likeBtn.style.transform = 'scale(1.2)';
-      setTimeout(() => {
-        likeBtn.style.transform = '';
-      }, 200);
+        // 添加动画效果
+        likeBtn.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+          likeBtn.style.transform = '';
+        }, 200);
+      }
     }
   });
 
-  // 初始化
+  // 初始化显示
   updateDisplay();
 
-  // 页面加载时异步初始化计数器（如果不存在）
-  (async function initCounter() {
-    try {
-      // 尝试获取信息，如果不存在会返回404
-      const info = await getInfo();
-      if (!info) {
-        // 计数器不存在，创建一个初始值为0的
-        await fetch(`${API_BASE}/create?namespace=${NAMESPACE}&key=${KEY}&value=0&enable_reset=0`);
-      }
-    } catch (err) {
-      // 忽略错误
-    }
-  })();
+  // 每 10 秒刷新一次计数（实时同步其他用户的点赞）
+  setInterval(updateDisplay, 10000);
 })();
 
 // ===== Publications Filter =====
@@ -177,4 +171,3 @@ document.querySelectorAll('.nav a[href^="#"]').forEach((anchor) => {
     }
   });
 });
-
